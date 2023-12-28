@@ -5,6 +5,8 @@ import pandas as pd
 import extract, transform, validation, load
 from utility import get_logger, save_json
 
+import settings
+
 # set up logging
 logger = get_logger(__name__)
 
@@ -16,7 +18,7 @@ def run(
 
     url = "https://api.data.gov.sg/v1/environment/pm25"
 
-    data, metadata = extract.extract(url)
+    data, metadata = extract.extract(url,feature_group_version)
 
     logger.info("Successfully extracted data from API.")
 
@@ -43,11 +45,9 @@ def run(
     logger.info(f"Caching data and metadata")
     # cache data
     logger.info(f"metadata contains: {metadata}")
-    data.to_csv(f"{metadata['cache_dir']}/PM25_Hourly.csv",index=False)
-    save_json(metadata, file_name="feature_pipeline_metadata.json", save_dir=f"{metadata['cache_dir']}") # export metadata
+    data.to_parquet(f"{metadata['cache_dir']}/PM25_Hourly.parquet",index=False)
+    save_json(metadata, file_name="feature_pipeline_metadata.json", save_dir=f"{settings.OUTPUT_DIR}") # export metadata
     logger.info("Done!")
-
-
 
 if __name__ == "__main__":
     fire.Fire(run)

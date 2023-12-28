@@ -89,12 +89,17 @@ def to_feature_store(
             "description": "PSI reading for north region.",
             "validation_rules": ">=0 (float)",
         },
+        {
+            "name": "reading_average",
+            "description": "Average PSI reading for Singapore.",
+            "validation_rules": ">=0 (float)",
+        },
     ]
+    
     for description in feature_descriptions:
         pm25_feature_group.update_feature_description(
             description["name"], description["description"]
         )
-
     # Update statistics.
     pm25_feature_group.statistics_config = {
         "enabled": True,

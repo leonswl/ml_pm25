@@ -1,0 +1,148 @@
+wandb_version: 1
+
+daily_season__manual_selection:
+  desc: null
+  value:
+  - day_of_week
+  - hour_of_day
+forecaster__estimator__learning_rate:
+  desc: null
+  value: 0.1
+forecaster__estimator__max_depth:
+  desc: null
+  value: -1
+forecaster__estimator__n_estimators:
+  desc: null
+  value: 2500
+forecaster__estimator__n_jobs:
+  desc: null
+  value: -1
+forecaster__estimator__reg_lambda:
+  desc: null
+  value: 0.015
+forecaster_transformers__window_summarizer__lag_feature__lag:
+  desc: null
+  value:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+  - 49
+  - 50
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+  - 62
+  - 63
+  - 64
+  - 65
+  - 66
+  - 67
+  - 68
+  - 69
+  - 70
+  - 71
+  - 72
+forecaster_transformers__window_summarizer__lag_feature__mean:
+  desc: null
+  value:
+  - - 1
+    - 24
+  - - 1
+    - 48
+  - - 1
+    - 72
+forecaster_transformers__window_summarizer__lag_feature__std:
+  desc: null
+  value:
+  - - 1
+    - 24
+  - - 1
+    - 48
+forecaster_transformers__window_summarizer__n_jobs:
+  desc: null
+  value: 1
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.3
+    cli_version: 0.16.1
+    framework: lightgbm
+    is_jupyter_run: true
+    is_kaggle_kernel: false
+    start_time: 1703401925.953182
+    t:
+      1:
+      - 5
+      - 8
+      - 53
+      - 55
+      2:
+      - 5
+      - 8
+      - 53
+      - 55
+      3:
+      - 2
+      - 13
+      - 23
+      - 37
+      4: 3.11.3
+      5: 0.16.1
+      8:
+      - 1
+      - 4
+      - 6
+      13: darwin-arm64

@@ -25,6 +25,7 @@ def build_expectation_suite() -> ExpectationSuite:
                     "reading_central",
                     "reading_south",
                     "reading_north",
+                    "reading_average"
                 ]
             },
         )
@@ -58,7 +59,7 @@ def build_expectation_suite() -> ExpectationSuite:
     )
 
     ## readings
-    readings_list = ["reading_west","reading_east","reading_central","reading_north",'reading_south']
+    readings_list = ["reading_west","reading_east","reading_central","reading_north",'reading_south',"reading_average"]
 
     for reading in readings_list:
         # is int

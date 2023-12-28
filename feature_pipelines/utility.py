@@ -3,6 +3,7 @@ import logging
 import os
 import json
 from pathlib import Path
+import pandas as pd
 import settings
 
 
@@ -47,10 +48,28 @@ def load_json(file_name: str, save_dir: str = settings.OUTPUT_DIR) -> dict:
     Returns: Dictionary with the data.
     """
 
-    data_path = Path(save_dir) / file_name
+    data_path = Path(os.path.join(save_dir,file_name))
     if not data_path.exists():
         logging.error(FileNotFoundError(f"Cached JSON from {data_path} does not exist.")) 
         return None
 
     with open(data_path, "r") as f:
         return json.load(f)
+    
+def load_csv(file_name: str, save_dir: str = settings.OUTPUT_DIR)->pd.DataFrame:
+    """
+    Function to load cached csv file
+
+    Args:
+        file_name: Name of the JSON file.
+        save_dir: Directory of the JSON file.
+
+    Returns: pandas dataframe of cached data.   
+    """
+
+    data_path = Path(os.path.join(save_dir,file_name))
+    if not data_path.exists():
+        logging.error(FileNotFoundError(f"Cached JSON from {data_path} does not exist.")) 
+        return None
+    
+    return pd.read_csv(data_path)

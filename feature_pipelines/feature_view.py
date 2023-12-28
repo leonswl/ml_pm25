@@ -11,7 +11,9 @@ import hsfs
 logger = get_logger(__name__)
 
 def create(
-    feature_group_version: Optional[int] = None
+    feature_group_version: Optional[int] = None,
+    start_datetime: Optional[datetime] = None,
+    end_datetime: Optional[datetime] = None,
 ):
     """Create a new feature view version and training dataset
     based on the given feature group version and start and end datetimes.
@@ -41,6 +43,10 @@ def create(
     except hsfs.client.exceptions.RestAPIError:
         # logger.info("No feature views found for pm25_singapore_view.")
         feature_views = []
+    except ValueError as e:
+        logger.error(e)
+        feature_views = []
+        
 
     for feature_view in feature_views:
         try:
@@ -70,9 +76,9 @@ def create(
     )
 
     # Create training dataset.
-    # logger.info(
-    #     f"Creating training dataset between {start_datetime} and {end_datetime}."
-    # )
+    logger.info(
+        f"Creating training dataset between {start_datetime} and {end_datetime}."
+    )
     feature_view.create_training_data(
         description="PM2.5 Singapore training dataset",
         data_format="csv",

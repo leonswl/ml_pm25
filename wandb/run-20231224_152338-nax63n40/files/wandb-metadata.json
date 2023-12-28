@@ -1,0 +1,37 @@
+{
+    "os": "macOS-13.4-arm64-arm-64bit",
+    "python": "3.11.3",
+    "heartbeatAt": "2023-12-24T07:23:39.166135",
+    "startedAt": "2023-12-24T07:23:38.470623",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/leonsun/Documents/GitHub/ml_pm25/training_pipelines/hyperparameter_tuning.py",
+    "codePathLocal": "training_pipelines/hyperparameter_tuning.py",
+    "codePath": "training_pipelines/hyperparameter_tuning.py",
+    "git": {
+        "remote": "https://github.com/leonswl/ml_pm25.git",
+        "commit": "16eb3d59921ced4f233c90882d81c600a4d5f77a"
+    },
+    "email": "leonsunwl@gmail.com",
+    "root": "/Users/leonsun/Documents/GitHub/ml_pm25",
+    "host": "Leons-Mac-mini.local",
+    "username": "leonsun",
+    "executable": "/Users/leonsun/Documents/GitHub/ml_pm25/.venv/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "disk": {
+        "/": {
+            "total": 228.27386474609375,
+            "used": 8.447956085205078
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 16.0
+    }
+}
