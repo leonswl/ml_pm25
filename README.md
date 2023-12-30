@@ -31,15 +31,23 @@ We will load the transformed data into Hopswork feature store.
 
 This sequence of steps for the training pipeline can be summarised below:
 1. Load the data from Hopsworks.
+[data.py](training_pipelines/data.py) will load the dataset using `load_dataset_from_feature_store()` from the Hopsworks feature store with the given version of feature view and training data. 
 2. Initialize a W&B run.
+[data.py](training_pipelines/data.py) will then log to W&B the metadata related to this datase.
+The data is prepared for sktime, which requires the data to be modeled using multi-indexes. The `prepare_data()` function will set the timestamp as PeriodIndexes and split the data into train and test set.
 3. Load the best_config artifact.
 4. Build the baseline model.
+[models.py](training_pipelines/models.py) will build a naive baseline model using `build_baseline_model.py`.
 5. Train and evaluate the baseline model on the test split.
+[train.py](training_pipelines/train.py) will train and evaluate the baseline model using `train_model()` and `evaluate()`. 
 6. Build the fancy model using the latest best configuration.
+[models.py](training_pipelines/models.py) will build a fancy model using Sktome and LightGBM using `buid_model()`.
 7. Train and evaluate the fancy model on the test split.
+[train.py](training_pipelines/train.py) will train and evaluate the Sktime and lightGBM models using `train_model()` and `evaluate()`. 
 8. Render the results to see how they perform visually.
-9. Retrain the model on the whole dataset. This is critical for time series models as you must retrain them until the present moment to forecast the future.
-10. Forecast future values.
-11. Render the forecasted values.
-12. Save the best model as an Artifact in W&B
-13. Save the best model in the Hopsworks' model registry
+[train.py](training_pipelines/train.py) will render the visuals
+9.  Retrain the model on the whole dataset. This is critical for time series models as you must retrain them until the present moment to forecast the future.
+10.  Forecast future values.
+11.  Render the forecasted values.
+12.  Save the best model as an Artifact in W&B
+13.  Save the best model in the Hopsworks' model registry

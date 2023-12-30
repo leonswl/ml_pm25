@@ -282,35 +282,35 @@ def render(
     timeseries: OrderedDictType[str, pd.DataFrame],
     output_dir: str,
     prefix: Optional[str] = None,
-    delete_from_disk: bool = True,
+    delete_from_disk: bool = False,
 ):
     """Render the timeseries as a single plot per (area, consumer_type) and saves them to disk and to wandb."""
 
     # grouped_timeseries = OrderedDict()
-    for split, df in timeseries.items():
-        fig, ax = plot_series(df,labels=df.columns)
-        fig.suptitle(f"{split}")
-        # save matplotlib image
-        image_save_path = str(output_dir / f"{split}.png")
-        plt.savefig(image_save_path)
-        plt.close(fig)
+    fig, ax = plot_series(*timeseries.values(),labels=timeseries.keys())
+    fig.suptitle(f"{prefix}")
+    # save matplotlib image
+    image_save_path = output_dir / f"{prefix}.png"
+    plt.savefig(image_save_path)
+    plt.close(fig)
+    print(f"figure have been saved to {image_save_path}")
 
-        if prefix:
-            wandb.log({prefix: wandb.Image(image_save_path)})
-        else:
-            wandb.log(wandb.Image(image_save_path))
+    if prefix:
+        wandb.log({prefix: wandb.Image(str(image_save_path))})
+    else:
+        wandb.log(wandb.Image(str(image_save_path)))
 
-        if delete_from_disk:
-            os.remove(image_save_path)
-        # df = df.reset_index(level=0)
-        # groups = df.groupby(["area", "consumer_type"])
-        # for group_name, split_group_values in groups:
-        #     group_values = grouped_timeseries.get(group_name, {})
+    if delete_from_disk:
+        os.remove(image_save_path)
+    # df = df.reset_index(level=0)
+    # groups = df.groupby(["area", "consumer_type"])
+    # for group_name, split_group_values in groups:
+    #     group_values = grouped_timeseries.get(group_name, {})
 
-        #     grouped_timeseries[group_name] = {
-        #         f"{split}": split_group_values["energy_consumption"],
-        #         **group_values,
-        #     }
+    #     grouped_timeseries[group_name] = {
+    #         f"{split}": split_group_values["energy_consumption"],
+    #         **group_values,
+    #     }
 
     # output_dir = OUTPUT_DIR / prefix if prefix else OUTPUT_DIR
     # output_dir.mkdir(parents=True, exist_ok=True)
