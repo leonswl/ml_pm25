@@ -1,0 +1,37 @@
+{
+    "os": "macOS-13.4-arm64-arm-64bit",
+    "python": "3.11.3",
+    "heartbeatAt": "2023-12-30T14:08:38.108231",
+    "startedAt": "2023-12-30T14:08:36.502765",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/leonsun/Documents/GitHub/ml_pm25/training_pipelines/train.py",
+    "codePathLocal": "training_pipelines/train.py",
+    "codePath": "training_pipelines/train.py",
+    "git": {
+        "remote": "https://github.com/leonswl/ml_pm25.git",
+        "commit": "861246470d38beb2ae229e375125b3962c5601b2"
+    },
+    "email": "leonsunwl@gmail.com",
+    "root": "/Users/leonsun/Documents/GitHub/ml_pm25",
+    "host": "Leons-Mac-mini.local",
+    "username": "leonsun",
+    "executable": "/Users/leonsun/Documents/GitHub/ml_pm25/.venv/bin/python3",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "disk": {
+        "/": {
+            "total": 228.27386474609375,
+            "used": 8.447944641113281
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 16.0
+    }
+}
