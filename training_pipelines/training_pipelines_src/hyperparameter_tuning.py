@@ -12,11 +12,11 @@ from sktime.forecasting.model_selection import ExpandingWindowSplitter
 from sktime.performance_metrics.forecasting import MeanAbsolutePercentageError
 from sktime.utils.plotting import plot_windows
 
-import utility
+from training_pipelines_src import utility
 # from configs import gridsearch as gridsearch_configs
-from data import load_dataset_from_feature_store
-from models import build_model
-from settings import SETTINGS, OUTPUT_DIR
+from training_pipelines_src.data import load_dataset_from_feature_store
+from training_pipelines_src.models import build_model
+from training_pipelines_src.settings import SETTINGS, OUTPUT_DIR
 
 
 logger = utility.get_logger(__name__)

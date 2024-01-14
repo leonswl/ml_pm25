@@ -8,7 +8,7 @@ import wandb
 from pathlib import Path
 from typing import Union, Optional
 
-import settings
+from training_pipelines_src import settings
 
 def get_logger(name: str) -> logging.Logger:
     """

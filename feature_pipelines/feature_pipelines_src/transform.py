@@ -1,8 +1,8 @@
 import pandas as pd
 
+from feature_pipelines_src.utility import load_parquet
 
-
-def transform(data: pd.DataFrame) -> pd.DataFrame:
+def transform(data: pd.DataFrame, cache_dir:str) -> pd.DataFrame:
     """
     Wrapper function to apply data transformation on extracted data
 
@@ -13,12 +13,51 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
         df [pandas dataframe]: transformed records in pandas dataframe
     
     """
-
     data = _rename_columns(data)
     data = _compute_average_psi(data)
     data = _cast_columns(data)
+    data = _update_data(data, cache_dir)
+
     return data
 
+def _update_data(df:pd.DataFrame, cache_dir:str):
+    """
+    Function to update dataset with newly extracted data. 
+
+    Args:
+        df [pandas dataframe]: new data that is extracted based on latest run
+        cache_dir [str]: path directory of cached output
+
+    Returns:
+        completed_df [pandas dataframe]: updated data 
+    
+    """
+
+    # merge cached data and newly extracted data together
+
+    cached_df = load_parquet(
+        file_name="PM25_Hourly.parquet",
+        save_dir=cache_dir)
+    
+    if cached_df is None:
+        return df
+
+    else:
+        # drop overlapping hourly data
+        # find earliest timestamp in new data and check if timestamp exist in cached data
+        # drop overlapped existing data in cached data 
+        cached_df.drop(cached_df.loc[cached_df['timestamp'] >= df['timestamp'].min()].index, inplace=True) 
+        
+        # merge cached and newly extracted data
+        completed_df = pd.concat([cached_df, df],axis=0).sort_values(by='timestamp').reset_index(drop=True)
+
+        # ensure timestamp is in pandas datetime format
+        columns = ['timestamp','update_timestamp']
+        for col in columns:
+            # df[col] = df[col].apply(lambda x: 'T'.join(x.split(" ")))
+            completed_df[col] = pd.to_datetime(completed_df[col], utc=True)
+
+        return completed_df
 
 def _rename_columns(df: pd.DataFrame) -> pd.DataFrame:
     """

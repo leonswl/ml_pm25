@@ -4,8 +4,8 @@ import wandb
 
 from typing import Optional
 
-import utility
-from settings import SETTINGS, OUTPUT_DIR
+from training_pipelines_src import utility
+from training_pipelines_src.settings import SETTINGS, OUTPUT_DIR
 
 logger = utility.get_logger(__name__)
 

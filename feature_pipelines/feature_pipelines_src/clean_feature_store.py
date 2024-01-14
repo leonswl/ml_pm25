@@ -2,7 +2,7 @@ import fire
 import hopsworks
 
 import settings
-from utility import get_logger
+from feature_pipelines_src.utility import get_logger
 
 # set up logging
 logger = get_logger(__name__)
