@@ -2,10 +2,10 @@ from datetime import datetime
 from typing import Optional
 
 import hopsworks
-
-from utility import get_logger, load_json, save_json
-import settings
 import hsfs
+
+from feature_pipelines_src.utility import get_logger, load_json, save_json
+from feature_pipelines_src import settings
 
 # set up logger
 logger = get_logger(__name__)

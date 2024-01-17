@@ -2,7 +2,8 @@
 
 This repository serves to illustrate and end-to-end deployment of a Machine Learning platform for batch prediction pipeline using Singapore PM2.5 open API data.
 
-
+## Architecture
+![ML Architecture](assets/img/ml_architecture.drawio.png)
 
 
 ## 1. [Feature Pipelines](feature_pipelines)
@@ -54,3 +55,19 @@ python3 training_pipelines/train.py
 10.  Forecast future values.
 11.  Render the forecasted values.
 12.  Save the best model as an Artifact in W&B and the best model in the Hopsworks' model registry
+
+## [Batch Prediction Pipeline](batch_prediction_pipelines)
+
+1. Load features from feature store in batch mode using [load_batch_data.py](batch_prediction_pipelines/load_batch_data.py)
+   - `load_data_from_feature_store()` loads a batch of data between a datetime range from Hospwork feature store for training using the `get_batch_data()` method.
+   - Prepare the indexes of the DataFrame for **sktime** and split between y and X (optional).
+2. Load the trained model from the model registry
+   - Reference from model registry using project name and model version to retrieve the best model
+   - Download the artifact/model and load to memory
+3. Perform forecasting for the next 24 hours
+   - Predict the values using forecasting horizon (default to 24 hours) 
+4. Save the predictions in a GCP bucket
+
+## [Private PyPi server with Airflow Orchestration](airflow)
+
+![Airflow ml_pipeline DAGs](assets/img/ml_pipeline_dags.png)

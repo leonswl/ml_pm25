@@ -8,8 +8,9 @@ from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
 
-from utility import get_logger, load_json, load_csv
-import settings
+from feature_pipelines_src.utility import get_logger, load_json
+from feature_pipelines_src import settings
+
 # set up logging
 logger = get_logger(__name__)
 
@@ -17,9 +18,6 @@ logger = get_logger(__name__)
 def extract(
         url:str,
         feature_group_version: int = 1,
-        cache_dir: Optional[Path] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
         ):
     """
     Extract records using API GET request
@@ -34,27 +32,34 @@ def extract(
     """
 
     # create cache directory for data and metadata if not exist
-    if cache_dir is None:
-        cache_dir = settings.OUTPUT_DIR / "data"
-        cache_dir.mkdir(parents=True, exist_ok=True)
+   
 
     # read cached metadata
     metadata = load_json("feature_pipeline_metadata.json")  
+    url = "https://api.data.gov.sg/v1/environment/pm25"
+
+    if metadata is not None:
+        start_date = metadata['start_date']
+        end_date = metadata['end_date']
+        cache_dir = metadata['cache_dir']
+        empty_records_lst = metadata['empty_records']
+        feature_group_version = metadata['feature_group_version']
+
+    # instantiate metadata if does not exist
+    elif metadata is None:
+        metadata = {}
+
+        cache_dir = settings.OUTPUT_DIR / "data"
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        empty_records_lst = []
 
     # compute extraction window
     extraction_window, start_date, end_date = _compute_extraction_window(
         cache_dir=cache_dir,
-        start_date=start_date, 
-        end_date=end_date,
         metadata=metadata)
-    
-    # instantiate metadata if does not exist
-    if metadata is None:
-        metadata = {}
     
     # initialise empty list to hold each daily dataframe of parsed json records from the retrieved response
     df_records_lst = []
-    empty_records_lst = []
     for date in extraction_window:
 
         # define params
@@ -76,14 +81,6 @@ def extract(
     # combine daily records together
     df_records_total = pd.concat(df_records_lst, axis=0).sort_values(by='timestamp').reset_index(drop=True)
 
-    # merge cached data and newly extracted data together
-    # cached_df = load_csv(
-    #     file_name="PM25_Hourly.csv",
-    #     save_dir=cache_dir)
-      
-    # cached_df_fixed = fix_timestamp(cached_df)
-    # df_records_completed = pd.concat([df_records_total,cached_df_fixed],axis=0).sort_values(by='timestamp').reset_index(drop=True)
-
     # update metadata with the new extraction window start and end dates
     metadata['start_date'] = str(start_date)
     metadata['end_date']= str(end_date)
@@ -95,9 +92,8 @@ def extract(
 
 def _compute_extraction_window(
         cache_dir:Path,
-        start_date:Optional[str]=None, 
-        end_date:Optional[str]=None,
-        metadata:Optional[dict]=None
+        metadata:Optional[dict]=None,
+        data_origin_date:Optional[str]='2016-02-10'
         )->pd.DatetimeIndex:
         """
         Function to compute extraction window based on optional start and end dates.
@@ -110,54 +106,55 @@ def _compute_extraction_window(
         Returns:
             date_range [pandas DatetimeIndex]: date range in pandas DatetimeIndex format.
         """
-        if start_date == None:
-            start_date = '2016-02-10'
 
-        if end_date == None:
-            end_date = datetime.today().strftime('%Y-%m-%d')
+        end_date = datetime.today().strftime('%Y-%m-%d')
 
-        if metadata is None:
+        # data not extracted, pull all data from the API
+        if metadata == {}:
             logger.info("No metadata available.")
-            extraction_start_date = start_date
+            extraction_start_date = data_origin_date
             extraction_end_date = end_date
 
-            date_range = pd.date_range(
-            start=extraction_start_date, 
-            end=extraction_end_date
-            )
+            date_range = pd.date_range(start=extraction_start_date, end=extraction_end_date)
+            return date_range, extraction_start_date, extraction_end_date
 
+        # data is outdated, pull difference between latest cached date and today's date
         else:
-            cached_start_date = metadata['start_date']
-            cached_end_date = metadata['end_date']
+            start_date = metadata['start_date']
+            extraction_start_date = metadata['end_date']
+            extraction_end_date = end_date
             logger.info("Metadata detected.")
 
-            # extraction date falls within cached dates, load cached data since data already exist 
-            if (start_date >= cached_start_date) & (end_date <= cached_end_date):
-                # extract data from cached data 
-                file_path = cache_dir / "PM25_Hourly.csv"
-                if not file_path.exists():
-                    logger.info(f"Downloading data from: {file_path}")
+            date_range = pd.date_range(start=extraction_start_date,end=extraction_end_date)
+            return date_range, start_date, end_date
 
-            # extraction date falls outside of both start and end range. data will be extracted from both ends excluded cached data range
-            elif (start_date < cached_start_date) & (end_date > cached_end_date):
-                extraction_start_date = start_date
-                extraction_end_date = end_date
-                date_range1 = pd.date_range(start_date,datetime.strptime(cached_start_date,'%Y-%m-%d')-timedelta(days=1))
-                date_range2 = pd.date_range(datetime.strptime(cached_end_date,'%Y-%m-%d')+timedelta(days=1),end_date)
-                date_range = date_range1.union(date_range2)
+            # # extraction date falls within cached dates, load cached data since data already exist 
+            # if (cached_start_date >= data_origin_date) & (cached_end_date <= today_date):
+            #     # extract data from cached data 
+            #     file_path = cache_dir / "PM25_Hourly.csv"
+            #     if not file_path.exists():
+            #         logger.info(f"Downloading data from: {file_path}")
+
+            # # extraction date falls outside of both start and end range. data will be extracted from both ends excluded cached data range
+            # elif (today_date < cached_start_date) & (today_date > cached_end_date):
+            #     extraction_start_date = start_date
+            #     extraction_end_date = end_date
+            #     date_range1 = pd.date_range(start_date,datetime.strptime(cached_start_date,'%Y-%m-%d')-timedelta(days=1))
+            #     date_range2 = pd.date_range(datetime.strptime(cached_end_date,'%Y-%m-%d')+timedelta(days=1),end_date)
+            #     date_range = date_range1.union(date_range2)
             
-            # extraction date 
-            elif (start_date < cached_start_date) & (end_date <= cached_end_date):
-                extraction_start_date = start_date
-                extraction_end_date = cached_start_date
-                date_range = pd.date_range(extraction_start_date,extraction_end_date)
+            # # extraction date 
+            # elif (start_date < cached_start_date) & (end_date <= cached_end_date):
+            #     extraction_start_date = start_date
+            #     extraction_end_date = cached_start_date
+            #     date_range = pd.date_range(extraction_start_date,extraction_end_date)
 
-            elif (start_date >= cached_start_date) & (end_date > cached_end_date):
-                extraction_start_date = datetime.strptime(cached_end_date,'%Y-%m-%d')+timedelta(days=1)
-                extraction_end_date = end_date
-                date_range = pd.date_range(extraction_start_date,extraction_end_date)
+            # elif (start_date >= cached_start_date) & (end_date > cached_end_date):
+            #     extraction_start_date = datetime.strptime(cached_end_date,'%Y-%m-%d')+timedelta(days=1)
+            #     extraction_end_date = end_date
+            #     date_range = pd.date_range(extraction_start_date,extraction_end_date)
            
-        return date_range, start_date, end_date
+            
 
 def _extract_from_api(url:str, params:dict, date:str)->dict:
         """
@@ -229,12 +226,3 @@ def _explode_columns(records:list)->pd.DataFrame:
 
     return df
 
-def fix_timestamp (df):
-    """
-    Function to fix timestamp by joining date and time with 'T'.
-    """
-    columns = ['timestamp','update_timestamp']
-    for col in columns:
-        df[col] = df[col].apply(lambda x: 'T'.join(x.split(" ")))
-
-    return df

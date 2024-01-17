@@ -5,8 +5,8 @@ import wandb
 from sktime.forecasting.model_selection import temporal_train_test_split
 import pandas as pd
 
-from utility import init_wandb_run
-from settings import SETTINGS
+from training_pipelines_src.utility import init_wandb_run
+from training_pipelines_src.settings import SETTINGS
 
 def load_dataset_from_feature_store(
     feature_view_version: int, 
