@@ -113,3 +113,30 @@ def init_wandb_run(
     )
 
     return run
+
+def check_if_artifact_exists(
+    artifact_name: str,
+    project: str = settings.SETTINGS["WANDB_PROJECT"],
+    entity: str = settings.SETTINGS["WANDB_ENTITY"],
+) -> bool:
+    """Utiliy function that checks if a W&B artifact exists."""
+
+    try:
+        get_artifact(artifact_name, project, entity)
+
+        return True
+    except wandb.errors.CommError:
+        return False
+
+
+def get_artifact(
+    artifact_name: str,
+    project: str = settings.SETTINGS["WANDB_PROJECT"],
+    entity: str = settings.SETTINGS["WANDB_ENTITY"],
+) -> wandb.Artifact:
+    """Get the latest version of a W&B artifact."""
+
+    api = wandb.Api()
+    artifact = api.artifact(f"{entity}/{project}/{artifact_name}:latest")
+
+    return artifact

@@ -80,7 +80,7 @@ def ml_pipeline():
         requirements=[
             "--trusted-host 172.17.0.1",
             "--extra-index-url http://172.17.0.1",
-            "training_pipeline",
+            "training-pipelines",
         ],
         python_version="3.11",
         multiple_outputs=True,
@@ -105,7 +105,7 @@ def ml_pipeline():
         requirements=[
             "--trusted-host 172.17.0.1",
             "--extra-index-url http://172.17.0.1",
-            "training_pipeline",
+            "training-pipelines",
         ],
         python_version="3.11",
         multiple_outputs=False,
@@ -126,9 +126,9 @@ def ml_pipeline():
         requirements=[
             "--trusted-host 172.17.0.1",
             "--extra-index-url http://172.17.0.1",
-            "training_pipeline",
+            "training-pipelines",
         ],
-        python_version="3.9",
+        python_version="3.11",
         multiple_outputs=True,
         system_site_packages=False,
         trigger_rule=TriggerRule.ALL_DONE,
@@ -161,7 +161,7 @@ def ml_pipeline():
         requirements=[
             "--trusted-host 172.17.0.1",
             "--extra-index-url http://172.17.0.1",
-            "batch_prediction_pipeline",
+            "batch_prediction_pipelines",
         ],
         python_version="3.11",
         system_site_packages=False,
@@ -184,7 +184,7 @@ def ml_pipeline():
         requirements=[
             "--trusted-host 172.17.0.1",
             "--extra-index-url http://172.17.0.1",
-            "batch_prediction_pipeline",
+            "batch_prediction_pipelines",
         ],
         python_version="3.11",
         system_site_packages=False,
