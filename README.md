@@ -1,6 +1,6 @@
 # ml_pm25
 
-This repository serves to illustrate and end-to-end deployment of a Machine Learning platform for batch prediction pipeline using Singapore PM2.5 open API data.
+This repository serves to illustrate and end-to-end deployment of a Machine Learning platform for batch prediction pipeline using Singapore PM2.5 open API data. I have written a blog post as well to describe more about this project [here](https://www.layonsan.com/ml_system/)
 
 ## Architecture
 ![ML Architecture](assets/img/ml_architecture.drawio.png)
@@ -71,3 +71,32 @@ python3 training_pipelines/train.py
 ## [Private PyPi server with Airflow Orchestration](airflow)
 
 ![Airflow ml_pipeline DAGs](assets/img/ml_pipeline_dags.png)
+
+
+## Data Validation
+
+Great Expectation (GE) suite is used for data validation. Hopswork will run the GE validation suite whenever a new dataset is inserted into the feature group.
+
+## Monitoring
+
+### FastAPI
+FastAPI is used as the backend to consume predicions and monitoring metrics from GCS and expose them through a RESTful API. A variety of endpoints are defined to GET the predictions and monitoring metrics. 
+
+Endpoints:
+- `\health`: Health check
+- `\predictions`: GET prediction values
+- `\monitoring/metrics`: GET aggregated monitoring metrics
+
+Upon receiving the data request, it will access the data storage encoded to the preconfigured Pydantic schema. The retrieved response is subsequently decoded to JSON.
+
+![FastApi Docs](assets/img/fastapi.png)
+
+Head to [api README](app-api/README.md) for more details on the API
+
+### Streamlit
+
+Streamlit is the frontend visualisation tool to render predictions and monitoring metrics. This will be carried out in two separate applications.
+- app-monitoring: render monitoring metrics
+- app-predictions: render predictions
+
+For more information, head to [app-predictions README](app-predictions/README.md) or [app-monitoring README](app-monitoring/README.md).

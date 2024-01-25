@@ -1,5 +1,8 @@
 *.csv
 
+*temporal-wares-409805-a2b2d478278b.json
+*temporal-wares-409805-feab35315c7e.json
+
 *.DS_Store
 
 # Byte-compiled / optimized / DLL files

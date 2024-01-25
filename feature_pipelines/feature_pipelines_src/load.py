@@ -35,7 +35,7 @@ def to_feature_store(
     pm25_feature_group = feature_store.get_or_create_feature_group(
         name="pm25_singapore",
         version=feature_group_version,
-        description="Sihgapore hourly PSI level data. ",
+        description="Singapore hourly PSI level data. ",
         primary_key=["timestamp"],
         event_time="timestamp",
         online_enabled=False,

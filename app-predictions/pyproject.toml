@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "app-frontend"
+version = "0.1.0"
+description = ""
+authors = ["Leon Sun <leonsunwl@gmail.com>"]
+readme = "README.md"
+packages = [{include = "predictions_src"}]
+
+[tool.poetry.dependencies]
+python = ">3.9.7"
+streamlit = ">=1.20.0"
+plotly = ">=5.14.1"
+yarl = ">=1.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

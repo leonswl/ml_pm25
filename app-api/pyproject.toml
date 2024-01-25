@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "app-api"
+version = "0.1.0"
+description = ""
+authors = ["Leon Sun <leonsunwl@gmail.com>"]
+readme = "README.md"
+packages = [{include = "api_src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+pandas = ">=1.5.3"
+uvicorn = ">=0.21.0"
+fastapi = ">=0.94.1"
+pydantic = ">=1.10.6"
+pydantic-settings = ">=2.1.0"
+pyarrow = ">=11.0.0"
+gcsfs = ">=2023.3.0"
+python-dotenv = ">=0.21.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -38,6 +38,16 @@ def compute(feature_view_version: Optional[int] = None) -> None:
         return
     logger.info("Successfully loaded old predictions.")
 
+    predictions_min_timestamp = (
+        predictions.index.min()
+    )
+    predictions_max_timestamp = (
+        predictions.index.max()
+    )
+    logger.info(
+        f"Loading predictions from {predictions_min_timestamp} to {predictions_max_timestamp}."
+    )
+
     logger.info("Connecting to the feature store...")
     project = hopsworks.login(
         api_key_value=settings.SETTINGS["FS_API_KEY"],
@@ -46,16 +56,9 @@ def compute(feature_view_version: Optional[int] = None) -> None:
     fs = project.get_feature_store()
     logger.info("Successfully connected to the feature store.")
 
+    
+
     logger.info("Loading latest data from feature store...")
-    predictions_min_timestamp = (
-        predictions.index.min().to_timestamp()
-    )
-    predictions_max_timestamp = (
-        predictions.index.max().to_timestamp()
-    )
-    logger.info(
-        f"Loading predictions from {predictions_min_timestamp} to {predictions_max_timestamp}."
-    )
     _, latest_observations = load_batch_data.load_data_from_feature_store(
         fs,
         feature_view_version,
