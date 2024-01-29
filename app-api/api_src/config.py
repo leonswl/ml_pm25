@@ -8,6 +8,8 @@ from typing import List, Optional, cast
 from pydantic import AnyHttpUrl
 from pydantic_settings import BaseSettings
 
+from api_src.settings import SETTINGS
+
 
 class LogLevel(str, enum.Enum):  # noqa: WPS600
     """Possible log levels."""
@@ -42,9 +44,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "PM25 Singapore API"
 
     # Google Cloud Platform credentials
-    GCP_PROJECT: Optional[str] = None
-    GCP_BUCKET: Optional[str] = None
-    GCP_SERVICE_ACCOUNT_JSON_PATH: Optional[str] = None
+    GCP_PROJECT: Optional[str] = SETTINGS["APP_API_GCP_PROJECT"],
+    GCP_BUCKET: Optional[str] = SETTINGS["APP_API_GCP_BUCKET"]
+    GCP_SERVICE_ACCOUNT_JSON_PATH: Optional[str] = SETTINGS[
+        "APP_API_GCP_SERVICE_ACCOUNT_JSON_PATH"]
 
     class Config:
         env_file = ".env"

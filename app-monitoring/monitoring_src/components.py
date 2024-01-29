@@ -22,9 +22,10 @@ def build_metrics_plot():
         json_response = response.json()
 
         # Build DataFrame for plotting.
-        timestamp = json_response.get("timestamp", [])
+        # timestamp = json_response.get("timestamp", [])
         mape = json_response.get("mape", [])
-        metrics_df = build_dataframe(timestamp, mape, values_column_name="mape")
+        # metrics_df = build_dataframe(timestamp, mape, values_column_name="mape")
+        metrics_df = build_dataframe(mape, values_column_name="mape")
 
         title = "Predictions vs. Observations | Aggregated Metrics"
 
@@ -108,20 +109,25 @@ def build_data_plot():
     return fig
 
 
-def build_dataframe(timestamp: List[int], average_reading_values: List[float]):
+def build_dataframe(
+        timestamp: List[int], 
+        average_reading_values: List[float],
+        values_column_name: str = "reading_average"):
     """
     Build DataFrame for plotting from timestamps and energy consumption values.
 
     Args:
         timestamp (List[int]): list of timestamp values in UTC
         values (List[float]): list of energy consumption values
+        values_column_name (str): name of the column containing the values
     """
 
     df = pd.DataFrame(
         list(zip(timestamp, average_reading_values)),
-        columns=["timestamp", "average_reading"],
+        columns=["timestamp", values_column_name],
     )
     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="h")
+    print(df)
 
     # Resample to hourly frequency to make the data continuous.
     # df = df.set_index("timestamp")

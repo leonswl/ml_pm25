@@ -118,7 +118,7 @@ def write_blob_to(bucket: storage.Bucket, blob_name: str, data: pd.DataFrame):
 
     blob = bucket.blob(blob_name=blob_name)
     with blob.open("wb") as f:
-        data.to_parquet(f)
+        data.to_parquet(f,index=True)
 
 
 def read_blob_from(bucket: storage.Bucket, blob_name: str) -> Optional[pd.DataFrame]:
