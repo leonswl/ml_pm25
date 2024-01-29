@@ -56,14 +56,14 @@ def compute(feature_view_version: Optional[int] = None) -> None:
     fs = project.get_feature_store()
     logger.info("Successfully connected to the feature store.")
 
-    
+    logger.info(f"Debugging - predictions index: {predictions.index}")
 
     logger.info("Loading latest data from feature store...")
     _, latest_observations = load_batch_data.load_data_from_feature_store(
         fs,
         feature_view_version,
-        start_datetime=predictions_min_timestamp,
-        end_datetime=predictions_max_timestamp,
+        start_datetime=predictions_min_timestamp.to_timestamp(),
+        end_datetime=predictions_max_timestamp.to_timestamp(),
     )
     logger.info("Successfully loaded latest data from feature store.")
 
@@ -93,15 +93,20 @@ def compute(feature_view_version: Optional[int] = None) -> None:
         )
 
         return
+    
+    predictions.index.name = 'timestamp'
 
-    mape_metrics = mean_absolute_percentage_error(
-            predictions["reading_average_observations"],
-            predictions["reading_average_predictions"],
+    # derive MAPE for each hourly timestamp
+    mape_metrics = predictions.groupby('timestamp').apply(
+        lambda point_in_time: mean_absolute_percentage_error(
+            point_in_time["reading_average_observations"],
+            point_in_time["reading_average_predictions"],
             symmetric=False,
         )
+    )
+    mape_metrics = mape_metrics.rename("MAPE")
+    metrics = mape_metrics.to_frame()
     
-    metrics = pd.Series(mape_metrics,name="MAPE").to_frame()
-
     logger.info("Successfully computed metrics...")
 
     logger.info("Saving new metrics...")

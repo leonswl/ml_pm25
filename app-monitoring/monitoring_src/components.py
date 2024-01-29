@@ -26,7 +26,7 @@ def build_metrics_plot():
         mape = json_response.get("mape", [])
         metrics_df = build_dataframe(timestamp, mape, values_column_name="mape")
 
-        title = "Predictions vs. Observations | Aggregated Metrics"
+        title = "Predictions vs. Observations | MAPE"
 
     # Create plot.
     fig = go.Figure()
@@ -57,7 +57,7 @@ def build_data_plot():
 
     # Get predictions from API.
     response = requests.get(
-        API_URL / "predictions", verify=False
+        API_URL / "monitoring" / "predictions", verify=False
     )
     if response.status_code != 200:
         # If the response is invalid, build empty dataframes in the proper format.
@@ -69,15 +69,15 @@ def build_data_plot():
         json_response = response.json()
 
         # Build DataFrames for plotting.
-        timestamp = json_response.get("timestamp")
-        average_reading = json_response.get("reading_average")
-        pred_timestamp = json_response.get("preds_timestamp")
-        pred_average_reading = json_response.get("preds_reading_average")
+        y_monitoring_timestamp = json_response.get("y_monitoring_timestamp")
+        y_monitoring_average_reading = json_response.get("y_monitoring_average_reading")
+        predictions_monitoring_timestamp = json_response.get("predictions_monitoring_timestamp")
+        predictions_monitoring_average_reading = json_response.get("predictions_monitoring_average_reading")
 
-        train_df = build_dataframe(timestamp, average_reading)
-        preds_df = build_dataframe(pred_timestamp, pred_average_reading)
+        train_df = build_dataframe(y_monitoring_timestamp, y_monitoring_average_reading)
+        preds_df = build_dataframe(predictions_monitoring_timestamp, predictions_monitoring_average_reading)
 
-        title = "Average PM25 per Hour"
+        title = "Predictions vs. Observations | Hourly Average reading (PM25)"
 
     # Create plot.
     fig = go.Figure()
@@ -108,23 +108,27 @@ def build_data_plot():
     return fig
 
 
-def build_dataframe(timestamp: List[int], average_reading_values: List[float]):
+def build_dataframe(
+        timestamp: List[int], 
+        average_reading_values: List[float],
+        values_column_name: str = "reading_average"):
     """
     Build DataFrame for plotting from timestamps and energy consumption values.
 
     Args:
         timestamp (List[int]): list of timestamp values in UTC
         values (List[float]): list of energy consumption values
+        values_column_name (str): name of the column containing the values
     """
 
     df = pd.DataFrame(
         list(zip(timestamp, average_reading_values)),
-        columns=["timestamp", "average_reading"],
+        columns=["timestamp", values_column_name],
     )
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="h")
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
 
     # Resample to hourly frequency to make the data continuous.
-    # df = df.set_index("timestamp")
+    df = df.set_index("timestamp")
     df = df.resample("H").asfreq()
     df = df.reset_index()
 

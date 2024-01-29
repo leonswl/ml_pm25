@@ -9,14 +9,9 @@ from components import build_data_plot
 st.set_page_config(page_title=TITLE)
 st.title(TITLE)
 
-st.write(API_URL)
-st.write(API_URL / "health")
-
 response_health = requests.get(
         API_URL / "health", verify=False
     )
-
-st.write(response_health)
 
 
 # # Create dropdown for area selection.

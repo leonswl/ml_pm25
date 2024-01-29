@@ -3,7 +3,7 @@
 This repository serves to illustrate and end-to-end deployment of a Machine Learning platform for batch prediction pipeline using Singapore PM2.5 open API data. I have written a blog post as well to describe more about this project [here](https://www.layonsan.com/ml_system/)
 
 ## Architecture
-![ML Architecture](assets/img/ml_architecture.drawio.png)
+![ML Architecture](assets/img/ml_architecture_drawio.png)
 
 
 ## 1. [Feature Pipelines](feature_pipelines)
@@ -56,7 +56,7 @@ python3 training_pipelines/train.py
 11.  Render the forecasted values.
 12.  Save the best model as an Artifact in W&B and the best model in the Hopsworks' model registry
 
-## [Batch Prediction Pipeline](batch_prediction_pipelines)
+## 3. [Batch Prediction Pipeline](batch_prediction_pipelines)
 
 1. Load features from feature store in batch mode using [load_batch_data.py](batch_prediction_pipelines/load_batch_data.py)
    - `load_data_from_feature_store()` loads a batch of data between a datetime range from Hospwork feature store for training using the `get_batch_data()` method.
@@ -68,16 +68,16 @@ python3 training_pipelines/train.py
    - Predict the values using forecasting horizon (default to 24 hours) 
 4. Save the predictions in a GCP bucket
 
-## [Private PyPi server with Airflow Orchestration](airflow)
+## 4. [Private PyPi server with Airflow Orchestration](airflow)
 
 ![Airflow ml_pipeline DAGs](assets/img/ml_pipeline_dags.png)
 
 
-## Data Validation
+## 5. Data Validation
 
 Great Expectation (GE) suite is used for data validation. Hopswork will run the GE validation suite whenever a new dataset is inserted into the feature group.
 
-## Monitoring
+## 6. Monitoring
 
 ### FastAPI
 FastAPI is used as the backend to consume predicions and monitoring metrics from GCS and expose them through a RESTful API. A variety of endpoints are defined to GET the predictions and monitoring metrics. 
@@ -97,6 +97,12 @@ Head to [api README](app-api/README.md) for more details on the API
 
 Streamlit is the frontend visualisation tool to render predictions and monitoring metrics. This will be carried out in two separate applications.
 - app-monitoring: render monitoring metrics
+![Streamlit Monitoring Web App](assets/img/app-monitoring.png)
 - app-predictions: render predictions
+![Streamlit Predictions Web App](assets/img/app-predictions.png)
 
 For more information, head to [app-predictions README](app-predictions/README.md) or [app-monitoring README](app-monitoring/README.md).
+
+
+
+ 
