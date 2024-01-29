@@ -103,10 +103,6 @@ Streamlit is the frontend visualisation tool to render predictions and monitorin
 
 For more information, head to [app-predictions README](app-predictions/README.md) or [app-monitoring README](app-monitoring/README.md).
 
-## 7. Deployment
 
-Due to cost considerations, I have opted to exclude this section, as it falls outside the project's defined scope.
-
-In a production environment, the preferred approach involves deploying all machine learning components to a cloud provider (e.g., AWS, GCP, Azure) and establishing a Continuous Integration/Continuous Deployment (CI/CD) pipeline utilizing tools such as Github Actions or Azure Pipelines, among others.
 
  

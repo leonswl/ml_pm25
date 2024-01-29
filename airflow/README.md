@@ -50,3 +50,6 @@ docker compose --env-file .env up --build -d
 Once containers initiated successfully, head to 
 - [127.0.0.1:8080](http://127.0.0.1:8080/login/) to access the airflow UI  
 - [localhost](http://localhost/) to view the private my-pypi server
+
+![Airflow UI](../assets/img/airflow.png)
+

@@ -10,11 +10,24 @@ These schemas serves to:
 
 Take a look at the [FastAPI docs](https://fastapi.tiangolo.com/advanced/settings/).
 
+There are a few entry points into the local API server.
+
+1. Using `__main__` entry point
+
+The [`__main__.py`](api_src/__main__.py) provides an automatic entrypoint into initiating the FastAPI web server.
+
+```
+python3 api_src/__main__.py
+```
+
+2. Manual entry point:
+  
 cd into `api_src` folder
 ```
 APP_API_GCP_PROJECT="<project-name>" APP_API_GCP_BUCKET="<bucket-name>" _API_GCP_SERVICE_ACCOUNT_JSON_PATH="json-path" uvicorn application:get_app
 ```
 
+This will initialise the server on the defined port.
 ```
 INFO:     Started server process [4621]
 INFO:     Waiting for application startup.
@@ -31,3 +44,4 @@ INFO:     127.0.0.1:50939 - "GET /api/v1/openapi.json HTTP/1.1" 200 OK
 ```
 
 ![FastApi Docs](../assets/img/fastapi.png)
+
