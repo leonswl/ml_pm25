@@ -27,14 +27,14 @@ def build_data_plot():
 
         # Build DataFrames for plotting.
         timestamp = json_response.get("timestamp")
-        average_reading = json_response.get("reading_average")
-        pred_timestamp = json_response.get("preds_timestamp")
-        pred_average_reading = json_response.get("preds_reading_average")
+        average_reading = json_response.get("average_reading")
+        pred_timestamp = json_response.get("datetime_preds_timestamp")
+        pred_average_reading = json_response.get("preds_average_reading")
 
         train_df = build_dataframe(timestamp, average_reading)
         preds_df = build_dataframe(pred_timestamp, pred_average_reading)
 
-        title = "Average PM25 per Hour"
+        title = "Hourly average reading (PM25)"
 
     # Create plot.
     fig = go.Figure()
@@ -49,17 +49,17 @@ def build_data_plot():
     fig.update_yaxes(title_text="Average Reading")
     fig.add_scatter(
         x=train_df["timestamp"],
-        y=train_df["reading_average"],
+        y=train_df["average_reading"],
         name="Observations",
         line=dict(color="#C4B6B6"),
-        hovertemplate="<br>".join(["Datetime: %{x}", "Average Reading: %{y} kWh"]),
+        hovertemplate="<br>".join(["Datetime: %{x}", "Average Reading: %{y}"]),
     )
     fig.add_scatter(
         x=preds_df["timestamp"],
-        y=preds_df["reading_average"],
+        y=preds_df["average_reading"],
         name="Predictions",
         line=dict(color="#FFC703"),
-        hovertemplate="<br>".join(["Datetime: %{x}", "Average Reading: %{y} kWh"]),
+        hovertemplate="<br>".join(["Datetime: %{x}", "Average Reading: %{y}"]),
     )
 
     return fig
@@ -78,10 +78,10 @@ def build_dataframe(timestamp: List[int], average_reading_values: List[float]):
         list(zip(timestamp, average_reading_values)),
         columns=["timestamp", "average_reading"],
     )
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="h")
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
 
     # Resample to hourly frequency to make the data continuous.
-    # df = df.set_index("timestamp")
+    df = df.set_index("timestamp")
     df = df.resample("H").asfreq()
     df = df.reset_index()
 

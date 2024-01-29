@@ -23,7 +23,11 @@ def load_env_vars(root_dir: Union[str, Path]) -> dict:
         root_dir = Path(root_dir)
 
     # load_dotenv(dotenv_path=root_dir / ".env.default")
-    load_dotenv(dotenv_path=root_dir / "app-api/.env", override=True)
+    # for local deployment
+    # load_dotenv(dotenv_path=root_dir / "app-api/.env", override=True)
+    # for docker deployment
+    load_dotenv(dotenv_path=root_dir / ".env", override=True)
+
 
     return dict(os.environ)
 

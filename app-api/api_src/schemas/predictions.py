@@ -11,7 +11,7 @@ class PredictionResults(BaseModel):
 
 
 class MonitoringMetrics(BaseModel):
-    # timestamp: list[datetime]
+    timestamp: list[datetime]
     mape: list[float]
 
 

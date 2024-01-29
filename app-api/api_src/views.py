@@ -88,13 +88,13 @@ async def get_metrics() -> Any:
         bucket=bucket, blob_name=f"metrics_monitoring.parquet"
     )
 
-    # timestamp = metrics.index.to_timestamp().to_list()
-    timestamp = metrics.index.to_list()
+    timestamp = metrics.index.to_timestamp().to_list()
+    datetime_timestamp = [timestamp.to_pydatetime() for timestamp in timestamp]
     # datetime_timestamp = [timestamp.to_pydatetime() for timestamp in timestamp]
     mape = metrics["MAPE"].to_list()
 
     return {
-        "timestamp": timestamp,
+        "timestamp": datetime_timestamp,
         "mape": mape,
     }
 
